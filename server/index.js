@@ -21,3 +21,17 @@ const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+app.get('/api/properties', async (req, res) => {
+  const params = {
+    TableName: 'Properties',
+  };
+
+  try {
+    const data = await dynamoDb.send(new ScanCommand(params));
+    res.json(data.Items);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error fetching properties');
+  }
+});
